@@ -11,7 +11,7 @@ import java.util.List;
 import retrofit.RestAdapter;
 import ru.mechanik_ulyanovsk.mechanik.R;
 import ru.mechanik_ulyanovsk.mechanik.content.model.Section;
-import ru.mechanik_ulyanovsk.mechanik.services.MechanicRESTAPI;
+import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
 import ru.mechanik_ulyanovsk.mechanik.ui.adapter.SectionAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -30,14 +30,8 @@ public class MainActivity extends ActionBarActivity {
         ListView listView = (ListView) findViewById(R.id.section_list);
         listView.setAdapter(adapter);
 
-        //TODO:Use a singleton
-        RestAdapter restAdapter = new RestAdapter
-                .Builder()
-                .setEndpoint("http://mehanik-ulyanovsk.ru")
-                .build();
-        MechanicRESTAPI mechanicRESTAPI = restAdapter.create(MechanicRESTAPI.class);
-        mechanicRESTAPI.listSections(null)
-                .subscribeOn(Schedulers.io())
+        MechanicDataSource.getInstance()
+                .listSections(null)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Section>>() {
                     @Override
