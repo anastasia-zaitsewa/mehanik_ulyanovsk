@@ -2,10 +2,12 @@ package ru.mechanik_ulyanovsk.mechanik.content.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Represents catalog item as an object
  */
-public class CatalogItem {
+public class CatalogItem implements Serializable {
 
     @SerializedName(value = "ID")
     private long id;
