@@ -46,9 +46,22 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (adapter.isSection(position)) {
-                    startActivity(new Intent(view.getContext(), MainActivity.class)
-                            .putExtra(Constants.ID_EXTRA, id)
-                            .putExtra(Constants.IS_SECTION, true));
+                    startActivity(new Intent(MainActivity.this, MainActivity.class)
+                                    .putExtra(Constants.ID_EXTRA, id)
+                                    .putExtra(
+                                            Constants.SECTION_NAME_EXTRA,
+                                            ((Section) adapter.getItem(position)).getName()
+                                    )
+                    );
+                } else {
+                    startActivity(
+                            new Intent(MainActivity.this, DetailActivity.class)
+                                    .putExtra(
+                                            Constants.SERIALIZABLE_CATALOG_ITEM_EXTRA,
+                                            (CatalogItem) adapter.getItem(position)
+                                    )
+
+                    );
                 }
             }
         });
@@ -67,6 +80,8 @@ public class MainActivity extends ActionBarActivity {
                 });
 
         if (itemId != null) {
+            MainActivity.this.setTitle(extras.getString(Constants.SECTION_NAME_EXTRA));
+
             MechanicDataSource.getInstance()
                     .listItems(itemId)
                     .observeOn(AndroidSchedulers.mainThread())
