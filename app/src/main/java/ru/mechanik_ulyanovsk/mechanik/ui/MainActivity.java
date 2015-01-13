@@ -46,9 +46,17 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (adapter.isSection(position)) {
-                    startActivity(new Intent(view.getContext(), MainActivity.class)
+                    startActivity(new Intent(MainActivity.this, MainActivity.class)
                             .putExtra(Constants.ID_EXTRA, id)
-                            .putExtra(Constants.IS_SECTION, true));
+                            .putExtra(Constants.IS_SECTION_EXTRA, true));
+                } else {
+                    startActivity(
+                            new Intent(MainActivity.this, DetailActivity.class)
+                                    .putExtra(
+                                            Constants.SERIALIZABLE_CATALOG_ITEM_EXTRA,
+                                            (CatalogItem) adapter.getItem(position)
+                                    )
+                    );
                 }
             }
         });

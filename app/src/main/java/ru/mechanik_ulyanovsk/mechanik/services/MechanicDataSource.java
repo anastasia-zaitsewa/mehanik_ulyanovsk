@@ -1,8 +1,11 @@
 package ru.mechanik_ulyanovsk.mechanik.services;
 
+import java.io.IOException;
 import java.util.List;
 
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.http.GET;
 import retrofit.http.Query;
 import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
@@ -23,9 +26,14 @@ public class MechanicDataSource {
     }
 
     private MechanicDataSource() {
-        RestAdapter restAdapter = new RestAdapter
-                .Builder()
+        RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://mehanik-ulyanovsk.ru")
+                .setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(RetrofitError cause) {
+                        return new IOException(cause);
+                    }
+                })
                 .build();
         api = restAdapter.create(MechanicAPI.class);
     }
