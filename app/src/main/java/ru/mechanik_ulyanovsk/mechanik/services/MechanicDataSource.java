@@ -5,7 +5,7 @@ import java.util.List;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Query;
-import ru.mechanik_ulyanovsk.mechanik.content.model.Item;
+import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
 import ru.mechanik_ulyanovsk.mechanik.content.model.Section;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -37,7 +37,7 @@ public class MechanicDataSource {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<Item>> listItems(Long sectionId){
+    public Observable<List<CatalogItem>> listItems(Long sectionId){
         return api
                 .listItems(sectionId)
                 .cache()
@@ -52,8 +52,10 @@ public class MechanicDataSource {
         @GET("/api/sections.php")
         Observable<List<Section>> listSections(@Query("id") Long id);
 
-        @GET("/api]/items.php")
-        Observable<List<Item>> listItems(@Query("section_id") Long sectionId);
-    }
+        @GET("/api/items.php")
+        Observable<List<CatalogItem>> listItems(@Query("section_id") Long sectionId);
 
+        @GET("/api/items.php")
+        Observable<List<CatalogItem>> listItems(@Query("filter") String filter);
+    }
 }

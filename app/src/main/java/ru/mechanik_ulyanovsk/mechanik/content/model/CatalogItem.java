@@ -3,9 +3,9 @@ package ru.mechanik_ulyanovsk.mechanik.content.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents item as an object
+ * Represents catalog item as an object
  */
-public class Item {
+public class CatalogItem {
 
     @SerializedName(value = "ID")
     private long id;
@@ -34,7 +34,7 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
+        return "CatalogItem{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", previewUri='" + previewUri + '\'' +
