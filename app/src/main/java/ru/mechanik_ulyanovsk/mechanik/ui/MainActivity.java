@@ -42,27 +42,24 @@ public class MainActivity extends ActionBarActivity {
         adapter = new ListAdapter(this);
         ListView listView = (ListView) findViewById(R.id.item_list);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (adapter.isSection(position)) {
-                    startActivity(new Intent(MainActivity.this, MainActivity.class)
-                                    .putExtra(Constants.ID_EXTRA, id)
-                                    .putExtra(
-                                            Constants.SECTION_NAME_EXTRA,
-                                            ((Section) adapter.getItem(position)).getName()
-                                    )
-                    );
-                } else {
-                    startActivity(
-                            new Intent(MainActivity.this, DetailActivity.class)
-                                    .putExtra(
-                                            Constants.SERIALIZABLE_CATALOG_ITEM_EXTRA,
-                                            (CatalogItem) adapter.getItem(position)
-                                    )
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            if (adapter.isSection(position)) {
+                startActivity(new Intent(MainActivity.this, MainActivity.class)
+                                .putExtra(Constants.ID_EXTRA, id)
+                                .putExtra(
+                                        Constants.SECTION_NAME_EXTRA,
+                                        ((Section) adapter.getItem(position)).getName()
+                                )
+                );
+            } else {
+                startActivity(
+                        new Intent(MainActivity.this, DetailActivity.class)
+                                .putExtra(
+                                        Constants.SERIALIZABLE_CATALOG_ITEM_EXTRA,
+                                        (CatalogItem) adapter.getItem(position)
+                                )
 
-                    );
-                }
+                );
             }
         });
 
@@ -72,12 +69,7 @@ public class MainActivity extends ActionBarActivity {
         MechanicDataSource.getInstance()
                 .listSections(itemId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Section>>() {
-                    @Override
-                    public void call(List<Section> sections) {
-                        adapter.setSections(sections);
-                    }
-                });
+                .subscribe(adapter::setSections);
 
         if (itemId != null) {
             MainActivity.this.setTitle(extras.getString(Constants.SECTION_NAME_EXTRA));
@@ -85,12 +77,7 @@ public class MainActivity extends ActionBarActivity {
             MechanicDataSource.getInstance()
                     .listItems(itemId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<List<CatalogItem>>() {
-                        @Override
-                        public void call(List<CatalogItem> catalogItems) {
-                            adapter.setCatalogItems(catalogItems);
-                        }
-                    });
+                    .subscribe(adapter::setCatalogItems);
         }
     }
 
@@ -110,7 +97,8 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
+            startActivity(new Intent(this, SearchActivity.class));
             return true;
         }
 
