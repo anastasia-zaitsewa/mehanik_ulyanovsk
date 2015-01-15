@@ -1,9 +1,9 @@
 package ru.mechanik_ulyanovsk.mechanik.ui;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +22,10 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         ImageView imageView = (ImageView) findViewById(R.id.detail_image);
         TextView textView = (TextView) findViewById(R.id.detail_text);
 
@@ -47,7 +51,25 @@ public class DetailActivity extends ActionBarActivity {
                 imageView,
                 imageOptions
         );
-        textView.setText(catalogItem.getName());
+
+        String catalogItemName = catalogItem.getName();
+        textView.setText(catalogItemName);
+        DetailActivity.this.setTitle(catalogItemName);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.homeAsUp || id == R.id.home || id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
