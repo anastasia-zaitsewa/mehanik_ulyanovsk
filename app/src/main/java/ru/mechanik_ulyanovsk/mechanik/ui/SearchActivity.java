@@ -28,7 +28,7 @@ import rx.subjects.BehaviorSubject;
 public class SearchActivity extends ActionBarActivity {
 
     private static final int THRESHOLD_SEC = 1;
-    private static final int THRESHOLD_CHAR = 3;
+    private static final int THRESHOLD_CHAR = 2;
     private ListAdapter adapter;
     private View emptyView;
     private final BehaviorSubject<String> searchUpdates = BehaviorSubject.create("");

@@ -64,7 +64,8 @@ public class MainActivity extends ActionBarActivity {
         });
 
         Bundle extras = getIntent().getExtras();
-        Long itemId = extras != null ? extras.getLong(Constants.ID_EXTRA) : null;
+        extras = (extras != null) ? extras : new Bundle();
+        Long itemId = extras.containsKey(Constants.ID_EXTRA) ? extras.getLong(Constants.ID_EXTRA) : null;
 
         MechanicDataSource.getInstance()
                 .listSections(itemId)
