@@ -22,10 +22,6 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         ImageView imageView = (ImageView) findViewById(R.id.detail_image);
         TextView textView = (TextView) findViewById(R.id.detail_text);
 
