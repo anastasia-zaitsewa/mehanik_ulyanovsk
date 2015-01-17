@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Механик</string>
-    <string name="action_settings">Settings</string>
-
+    <string name="title_activity_search">Поиск</string>
+    <string name="search_hint">Поиск</string>
+    <string name="no_search_results">Ничего не найдено</string>
 </resources>

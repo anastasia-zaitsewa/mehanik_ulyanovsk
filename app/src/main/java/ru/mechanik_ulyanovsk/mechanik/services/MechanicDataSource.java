@@ -28,12 +28,7 @@ public class MechanicDataSource {
     private MechanicDataSource() {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://mehanik-ulyanovsk.ru")
-                .setErrorHandler(new ErrorHandler() {
-                    @Override
-                    public Throwable handleError(RetrofitError cause) {
-                        return new IOException(cause);
-                    }
-                })
+                .setErrorHandler(IOException::new)
                 .build();
         api = restAdapter.create(MechanicAPI.class);
     }
@@ -48,6 +43,13 @@ public class MechanicDataSource {
     public Observable<List<CatalogItem>> listItems(Long sectionId){
         return api
                 .listItems(sectionId)
+                .cache()
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<CatalogItem>> listItems(String filter){
+        return api
+                .listItems(filter)
                 .cache()
                 .subscribeOn(Schedulers.io());
     }
