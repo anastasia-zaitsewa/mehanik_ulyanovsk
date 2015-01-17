@@ -1,11 +1,16 @@
 package ru.mechanik_ulyanovsk.mechanik.ui;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -14,6 +19,10 @@ import ru.mechanik_ulyanovsk.mechanik.content.Constants;
 import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
 
 public class DetailActivity extends ActionBarActivity {
+
+    private final static String PHONE_NUMBER_URI = "tel:88422250777";
+    private final static String MAIL_URI = "mailto:m-mehanik@mail.ru";
+    private final static String SUBJECT_URI = "?subject=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,37 @@ public class DetailActivity extends ActionBarActivity {
         String catalogItemName = catalogItem.getName();
         textView.setText(catalogItemName);
         DetailActivity.this.setTitle(catalogItemName);
+
+        Button call = (Button) findViewById(R.id.call_action);
+        Button mail = (Button) findViewById(R.id.mail_action);
+        call.setOnClickListener(v -> dial());
+        mail.setOnClickListener(v -> mail(catalogItemName));
+    }
+
+    private void dial() {
+        Intent intent = new Intent(
+                Intent.ACTION_DIAL,
+                Uri.parse(PHONE_NUMBER_URI)
+        );
+        startActivity(intent);
+    }
+
+    private void mail(String subject) {
+        Intent intent = new Intent(
+                Intent.ACTION_SENDTO,
+                Uri.parse(MAIL_URI + SUBJECT_URI + subject)
+        );
+
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException exception) {
+            Toast
+                    .makeText(
+                            DetailActivity.this,
+                            R.string.no_mailing_app,
+                            Toast.LENGTH_SHORT
+                    ).show();
+        }
     }
 
     @Override

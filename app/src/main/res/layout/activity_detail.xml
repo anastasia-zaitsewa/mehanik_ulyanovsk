@@ -25,7 +25,32 @@
             android:padding="8dp"
             android:gravity="center_horizontal"
             android:textColor="@android:color/primary_text_light"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/call_action"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableStart="@android:drawable/ic_menu_call"
+                android:drawableLeft="@android:drawable/ic_menu_call"
+                android:text="@string/call_action" />
+
+            <Button
+                android:id="@+id/mail_action"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@android:drawable/ic_menu_send"
+                android:drawableRight="@android:drawable/ic_menu_send"
+                android:text="@string/mail_action" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
