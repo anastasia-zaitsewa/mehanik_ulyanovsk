@@ -5,14 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import java.util.List;
 
 import ru.mechanik_ulyanovsk.mechanik.R;
 import ru.mechanik_ulyanovsk.mechanik.content.Constants;
@@ -21,7 +14,6 @@ import ru.mechanik_ulyanovsk.mechanik.content.model.Section;
 import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
 import ru.mechanik_ulyanovsk.mechanik.ui.adapter.ListAdapter;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -32,12 +24,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ImageLoaderConfiguration configuration =
-                new ImageLoaderConfiguration
-                        .Builder(this)
-                        .build();
-        ImageLoader.getInstance().init(configuration);
 
         adapter = new ListAdapter(this);
         ListView listView = (ListView) findViewById(R.id.item_list);

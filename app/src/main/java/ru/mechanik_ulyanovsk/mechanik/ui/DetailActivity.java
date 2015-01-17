@@ -7,9 +7,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 import ru.mechanik_ulyanovsk.mechanik.R;
 import ru.mechanik_ulyanovsk.mechanik.content.Constants;
@@ -24,28 +22,16 @@ public class DetailActivity extends ActionBarActivity {
         ImageView imageView = (ImageView) findViewById(R.id.detail_image);
         TextView textView = (TextView) findViewById(R.id.detail_text);
 
-        ImageLoaderConfiguration configuration =
-                new ImageLoaderConfiguration
-                        .Builder(this)
-                        .build();
-        DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.ic_menu_camera)
-                .showImageOnFail(R.drawable.ic_menu_camera)
-                .build();
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(configuration);
-
-
         CatalogItem catalogItem = (CatalogItem) getIntent()
                 .getExtras()
                 .get(Constants.SERIALIZABLE_CATALOG_ITEM_EXTRA);
-
         String detailUri = catalogItem.getDetailUri();
-        imageLoader.displayImage(
-                TextUtils.isEmpty(detailUri) ? null : Constants.SERVER_ROOT + detailUri,
-                imageView,
-                imageOptions
-        );
+        Picasso
+                .with(DetailActivity.this)
+                .load(TextUtils.isEmpty(detailUri) ? null : Constants.SERVER_ROOT + detailUri)
+                .placeholder(R.drawable.ic_menu_camera)
+                .error(R.drawable.ic_menu_camera)
+                .into(imageView);
 
         String catalogItemName = catalogItem.getName();
         textView.setText(catalogItemName);

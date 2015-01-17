@@ -9,8 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,20 +24,14 @@ import ru.mechanik_ulyanovsk.mechanik.content.model.Section;
  */
 public class ListAdapter extends BaseAdapter {
 
-    public static final String DRAWABLE_PATH_PREFIX = "drawable://";
     private LayoutInflater inflater;
     private final List<Section> sections = new ArrayList<>();
     private final List<CatalogItem> catalogItems = new ArrayList<>();
-    private final DisplayImageOptions imageOptions;
-    private final ImageLoader imageLoader = ImageLoader.getInstance();
+    private final Context context;
 
     public ListAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        imageOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.ic_menu_camera)
-                .showImageOnFail(R.drawable.ic_menu_camera)
-                .build();
-
+        this.context = context;
     }
 
     public void setSections(List<Section> input) {
@@ -95,19 +88,21 @@ public class ListAdapter extends BaseAdapter {
         if (isSection(position)) {
             Section section = sections.get(position);
             holder.listItemText.setText(section.getName());
-            imageLoader.displayImage(
-                    DRAWABLE_PATH_PREFIX + R.drawable.ic_menu_archive,
-                    holder.listItemImage
-            );
+            Picasso
+                    .with(context)
+                    .load(R.drawable.ic_menu_archive)
+                    .into(holder.listItemImage);
         } else {
             CatalogItem catalogItem = catalogItems.get(position - sections.size());
             holder.listItemText.setText(catalogItem.getName());
             String detailUri = catalogItem.getDetailUri();
-            imageLoader.displayImage(
-                    TextUtils.isEmpty(detailUri) ? null : Constants.SERVER_ROOT + detailUri,
-                    holder.listItemImage,
-                    imageOptions
-            );
+            Picasso
+                    .with(context)
+                    .load(TextUtils.isEmpty(detailUri) ? null : Constants.SERVER_ROOT + detailUri)
+                    .placeholder(R.drawable.ic_menu_camera)
+                    .error(R.drawable.ic_menu_camera)
+                    .into(holder.listItemImage);
+
         }
     }
 

@@ -6,12 +6,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -37,12 +33,6 @@ public class SearchActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        ImageLoaderConfiguration configuration =
-                new ImageLoaderConfiguration
-                        .Builder(this)
-                        .build();
-        ImageLoader.getInstance().init(configuration);
 
         adapter = new ListAdapter(this);
         ListView listView = (ListView) findViewById(R.id.search_result);
