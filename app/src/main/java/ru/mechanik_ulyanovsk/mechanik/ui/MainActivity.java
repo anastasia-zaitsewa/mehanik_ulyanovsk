@@ -13,15 +13,14 @@ import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
 import ru.mechanik_ulyanovsk.mechanik.content.model.Section;
 import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
 import ru.mechanik_ulyanovsk.mechanik.ui.adapter.ListAdapter;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private ListAdapter adapter;
-    private Subscription subscriptionCatalogItems;
-    private Subscription subscriptionSections;
+    private final CompositeSubscription subscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,18 +55,20 @@ public class MainActivity extends ActionBarActivity {
         extras = (extras != null) ? extras : new Bundle();
         Long itemId = extras.containsKey(Constants.ID_EXTRA) ? extras.getLong(Constants.ID_EXTRA) : null;
 
-        subscriptionSections = MechanicDataSource.getInstance()
-                .listSections(itemId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(adapter::setSections);
+        subscription.add(MechanicDataSource.getInstance()
+                        .listSections(itemId)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(adapter::setSections)
+        );
 
         if (itemId != null) {
             MainActivity.this.setTitle(extras.getString(Constants.SECTION_NAME_EXTRA));
 
-            subscriptionCatalogItems = MechanicDataSource.getInstance()
-                    .listItems(itemId)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(adapter::setCatalogItems);
+            subscription.add(MechanicDataSource.getInstance()
+                            .listItems(itemId)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(adapter::setCatalogItems)
+            );
         }
     }
 
@@ -98,11 +99,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!subscriptionSections.isUnsubscribed()) {
-            subscriptionSections.unsubscribe();
-        }
-        if(!subscriptionCatalogItems.isUnsubscribed()){
-            subscriptionCatalogItems.unsubscribe();
-        }
+        subscription.unsubscribe();
     }
 }
