@@ -17,6 +17,7 @@ import ru.mechanik_ulyanovsk.mechanik.content.Constants;
 import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
 import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
 import ru.mechanik_ulyanovsk.mechanik.ui.adapter.ListAdapter;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -28,6 +29,8 @@ public class SearchActivity extends ActionBarActivity {
     private ListAdapter adapter;
     private View emptyView;
     private final BehaviorSubject<String> searchUpdates = BehaviorSubject.create("");
+    private Subscription subscriptionResult;
+    private Subscription subscriptionClean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class SearchActivity extends ActionBarActivity {
 
         emptyView = findViewById(R.id.empty_view);
 
-        searchUpdates
+        subscriptionResult = searchUpdates
                 .sample(THRESHOLD_SEC, TimeUnit.SECONDS)
                 .filter(s -> s.length() > THRESHOLD_CHAR)
                 .flatMap(input -> MechanicDataSource.getInstance().listItems(input))
@@ -81,10 +84,21 @@ public class SearchActivity extends ActionBarActivity {
                     );
                 });
 
-        searchUpdates.subscribe(s -> {
+        subscriptionClean = searchUpdates.subscribe(s -> {
             if (s.length() <= THRESHOLD_CHAR) {
                 adapter.setCatalogItems(Collections.<CatalogItem>emptyList());
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!subscriptionResult.isUnsubscribed()) {
+            subscriptionResult.unsubscribe();
+        }
+        if (!subscriptionClean.isUnsubscribed()) {
+            subscriptionClean.unsubscribe();
+        }
     }
 }
