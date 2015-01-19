@@ -20,6 +20,7 @@ import ru.mechanik_ulyanovsk.mechanik.ui.adapter.ListAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+import rx.subscriptions.CompositeSubscription;
 
 public class SearchActivity extends ActionBarActivity {
 
@@ -28,6 +29,7 @@ public class SearchActivity extends ActionBarActivity {
     private ListAdapter adapter;
     private View emptyView;
     private final BehaviorSubject<String> searchUpdates = BehaviorSubject.create("");
+    private final CompositeSubscription subscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,25 +68,33 @@ public class SearchActivity extends ActionBarActivity {
 
         emptyView = findViewById(R.id.empty_view);
 
-        searchUpdates
-                .sample(THRESHOLD_SEC, TimeUnit.SECONDS)
-                .filter(s -> s.length() > THRESHOLD_CHAR)
-                .flatMap(input -> MechanicDataSource.getInstance().listItems(input))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(catalogItems -> {
-                    adapter.setCatalogItems(catalogItems);
-                    emptyView.setVisibility(
-                            catalogItems.isEmpty()
-                                    ? View.VISIBLE
-                                    : View.GONE
-                    );
-                });
+        subscription.add(searchUpdates
+                        .sample(THRESHOLD_SEC, TimeUnit.SECONDS)
+                        .filter(s -> s.length() > THRESHOLD_CHAR)
+                        .flatMap(input -> MechanicDataSource.getInstance().listItems(input))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(catalogItems -> {
+                            adapter.setCatalogItems(catalogItems);
+                            emptyView.setVisibility(
+                                    catalogItems.isEmpty()
+                                            ? View.VISIBLE
+                                            : View.GONE
+                            );
+                        })
+        );
 
-        searchUpdates.subscribe(s -> {
-            if (s.length() <= THRESHOLD_CHAR) {
-                adapter.setCatalogItems(Collections.<CatalogItem>emptyList());
-            }
-        });
+        subscription.add(searchUpdates.subscribe(s -> {
+                    if (s.length() <= THRESHOLD_CHAR) {
+                        adapter.setCatalogItems(Collections.<CatalogItem>emptyList());
+                    }
+                })
+        );
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscription.unsubscribe();
     }
 }

@@ -14,11 +14,13 @@ import ru.mechanik_ulyanovsk.mechanik.content.model.Section;
 import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
 import ru.mechanik_ulyanovsk.mechanik.ui.adapter.ListAdapter;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private ListAdapter adapter;
+    private final CompositeSubscription subscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +55,20 @@ public class MainActivity extends ActionBarActivity {
         extras = (extras != null) ? extras : new Bundle();
         Long itemId = extras.containsKey(Constants.ID_EXTRA) ? extras.getLong(Constants.ID_EXTRA) : null;
 
-        MechanicDataSource.getInstance()
-                .listSections(itemId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(adapter::setSections);
+        subscription.add(MechanicDataSource.getInstance()
+                        .listSections(itemId)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(adapter::setSections)
+        );
 
         if (itemId != null) {
             MainActivity.this.setTitle(extras.getString(Constants.SECTION_NAME_EXTRA));
 
-            MechanicDataSource.getInstance()
-                    .listItems(itemId)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(adapter::setCatalogItems);
+            subscription.add(MechanicDataSource.getInstance()
+                            .listItems(itemId)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(adapter::setCatalogItems)
+            );
         }
     }
 
@@ -90,5 +94,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscription.unsubscribe();
     }
 }
