@@ -90,7 +90,7 @@ public class ListAdapter extends BaseAdapter {
             holder.listItemText.setText(section.getName());
             Picasso
                     .with(context)
-                    .load(R.drawable.ic_menu_archive)
+                    .load(R.drawable.ic_folder_grey600_48dp)
                     .into(holder.listItemImage);
         } else {
             CatalogItem catalogItem = catalogItems.get(position - sections.size());
@@ -99,8 +99,8 @@ public class ListAdapter extends BaseAdapter {
             Picasso
                     .with(context)
                     .load(TextUtils.isEmpty(detailUri) ? null : Constants.SERVER_ROOT + detailUri)
-                    .placeholder(R.drawable.ic_menu_camera)
-                    .error(R.drawable.ic_menu_camera)
+                    .placeholder(R.drawable.ic_camera_alt_grey600_48dp)
+                    .error(R.drawable.ic_camera_alt_grey600_48dp)
                     .into(holder.listItemImage);
 
         }

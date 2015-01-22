@@ -38,8 +38,8 @@ public class DetailActivity extends ActionBarActivity {
         Picasso
                 .with(DetailActivity.this)
                 .load(TextUtils.isEmpty(detailUri) ? null : Constants.SERVER_ROOT + detailUri)
-                .placeholder(R.drawable.ic_menu_camera)
-                .error(R.drawable.ic_menu_camera)
+                .placeholder(R.drawable.ic_camera_alt_grey600_48dp)
+                .error(R.drawable.ic_camera_alt_grey600_48dp)
                 .into(imageView);
 
         String catalogItemName = catalogItem.getName();

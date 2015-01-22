@@ -38,8 +38,8 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableStart="@android:drawable/ic_menu_call"
-                android:drawableLeft="@android:drawable/ic_menu_call"
+                android:drawableStart="@drawable/ic_call_grey600_36dp"
+                android:drawableLeft="@drawable/ic_call_grey600_36dp"
                 android:text="@string/call_action" />
 
             <Button
@@ -48,8 +48,8 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@android:drawable/ic_menu_send"
-                android:drawableRight="@android:drawable/ic_menu_send"
+                android:drawableEnd="@drawable/ic_mail_grey600_36dp"
+                android:drawableRight="@drawable/ic_mail_grey600_36dp"
                 android:text="@string/mail_action" />
         </LinearLayout>
     </LinearLayout>
