@@ -86,7 +86,9 @@ public class ListAdapter extends BaseAdapter {
 
     private void bindView(int position, ViewHolder holder) {
         if (isSection(position)) {
+
             Section section = sections.get(position);
+            holder.listItemSubtext.setVisibility(View.GONE);
             holder.listItemText.setText(section.getName());
             Picasso
                     .with(context)
@@ -94,6 +96,13 @@ public class ListAdapter extends BaseAdapter {
                     .into(holder.listItemImage);
         } else {
             CatalogItem catalogItem = catalogItems.get(position - sections.size());
+            String article = catalogItem.getArticle();
+            if (article == null) {
+                holder.listItemSubtext.setVisibility(View.GONE);
+            } else {
+                holder.listItemSubtext.setVisibility(View.VISIBLE);
+                holder.listItemSubtext.setText(article);
+            }
             holder.listItemText.setText(catalogItem.getName());
             String detailUri = catalogItem.getDetailUri();
             Picasso
@@ -111,6 +120,7 @@ public class ListAdapter extends BaseAdapter {
 
         ViewHolder holder = new ViewHolder(
                 (TextView) view.findViewById(R.id.item_text),
+                (TextView) view.findViewById(R.id.item_subtext),
                 (ImageView) view.findViewById(R.id.item_image)
         );
         view.setTag(holder);
@@ -121,10 +131,12 @@ public class ListAdapter extends BaseAdapter {
 
     private class ViewHolder {
         final TextView listItemText;
+        final TextView listItemSubtext;
         final ImageView listItemImage;
 
-        ViewHolder(TextView listItemText, ImageView listItemImage) {
+        ViewHolder(TextView listItemText, TextView listItemSubtext, ImageView listItemImage) {
             this.listItemText = listItemText;
+            this.listItemSubtext = listItemSubtext;
             this.listItemImage = listItemImage;
         }
     }

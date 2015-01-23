@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class DetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ImageView imageView = (ImageView) findViewById(R.id.detail_image);
+        TextView subtextView = (TextView) findViewById(R.id.detail_subtext);
         TextView textView = (TextView) findViewById(R.id.detail_text);
 
         CatalogItem catalogItem = (CatalogItem) getIntent()
@@ -43,13 +45,24 @@ public class DetailActivity extends ActionBarActivity {
                 .into(imageView);
 
         String catalogItemName = catalogItem.getName();
+        String catalogItemArticle = catalogItem.getArticle();
+        String mailSubject;
+        if (catalogItemArticle == null){
+            subtextView.setVisibility(View.GONE);
+            mailSubject = catalogItemName;
+        } else {
+            subtextView.setVisibility(View.VISIBLE);
+            subtextView.setText(catalogItemArticle);
+            mailSubject = catalogItemName + ". Артикль: " + catalogItemArticle;
+        }
+
         textView.setText(catalogItemName);
         DetailActivity.this.setTitle(catalogItemName);
 
         Button call = (Button) findViewById(R.id.call_action);
         Button mail = (Button) findViewById(R.id.mail_action);
         call.setOnClickListener(v -> dial());
-        mail.setOnClickListener(v -> mail(catalogItemName));
+        mail.setOnClickListener(v -> mail(mailSubject));
     }
 
     private void dial() {
