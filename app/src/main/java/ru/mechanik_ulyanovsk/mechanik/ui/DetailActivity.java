@@ -24,7 +24,6 @@ public class DetailActivity extends ActionBarActivity {
     private final static String PHONE_NUMBER_URI = "tel:88422250777";
     private final static String MAIL_URI = "mailto:m-mehanik@mail.ru";
     private final static String SUBJECT_URI = "?subject=";
-    private static final String ARTICLE_PREFIX = ". Артикль: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +47,18 @@ public class DetailActivity extends ActionBarActivity {
         String catalogItemName = catalogItem.getName();
         String catalogItemArticle = catalogItem.getArticle();
         String mailSubject;
-        if (catalogItemArticle == null){
+        if (catalogItemArticle == null) {
             subtextView.setVisibility(View.GONE);
             mailSubject = catalogItemName;
         } else {
             subtextView.setVisibility(View.VISIBLE);
             subtextView.setText(catalogItemArticle);
-            mailSubject = catalogItemName + ARTICLE_PREFIX + catalogItemArticle;
+            mailSubject = String.format(
+                    "%s. %s: %s",
+                    catalogItem,
+                    Constants.ARTICLE,
+                    catalogItemArticle
+            );
         }
 
         textView.setText(catalogItemName);
