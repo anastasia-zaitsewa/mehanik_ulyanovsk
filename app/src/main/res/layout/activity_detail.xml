@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
 
         <ImageView
             android:id="@+id/detail_image"
@@ -27,6 +28,8 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/article_title"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/article"
@@ -37,6 +40,7 @@
             android:textSize="14sp" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/article"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +70,7 @@
 
         <TextView
             android:id="@+id/price_title"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/price"
@@ -78,7 +82,7 @@
 
         <TextView
             android:id="@+id/price"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/detail_padding_left"

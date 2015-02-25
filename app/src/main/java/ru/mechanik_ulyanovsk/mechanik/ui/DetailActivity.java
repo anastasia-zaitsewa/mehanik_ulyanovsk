@@ -39,6 +39,7 @@ public class DetailActivity extends ActionBarActivity {
         TextView quantityView = (TextView) findViewById(R.id.quantity);
         TextView priceView = (TextView) findViewById(R.id.price);
         View priceTitle = findViewById(R.id.price_title);
+        View articleTitle = findViewById(R.id.article_title);
 
         CatalogItem catalogItem = (CatalogItem) getIntent()
                 .getExtras()
@@ -56,9 +57,11 @@ public class DetailActivity extends ActionBarActivity {
         String mailSubject;
         if (catalogItemArticle == null) {
             subtextView.setVisibility(View.GONE);
+            articleTitle.setVisibility(View.GONE);
             mailSubject = catalogItemName;
         } else {
             subtextView.setVisibility(View.VISIBLE);
+            articleTitle.setVisibility(View.VISIBLE);
             subtextView.setText(catalogItemArticle);
             mailSubject = String.format(
                     "%s. %s: %s",
