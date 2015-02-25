@@ -13,8 +13,6 @@ public class CatalogItem implements Serializable {
     private long id;
     @SerializedName(value = "NAME")
     private String name;
-    @SerializedName(value = "PREVIEW_PICTURE")
-    private String previewUri;
     @SerializedName(value = "DETAIL_PICTURE")
     private String detailUri;
     @SerializedName(value = "PROPERTY_CML2_ARTICLE_VALUE")
@@ -26,10 +24,6 @@ public class CatalogItem implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public String getPreviewUri() {
-        return previewUri;
     }
 
     public String getDetailUri() {
@@ -45,7 +39,6 @@ public class CatalogItem implements Serializable {
         return "CatalogItem{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", previewUri='" + previewUri + '\'' +
                 ", detailUri='" + detailUri + '\'' +
                 ", article='" + article + '\'' +
                 '}';

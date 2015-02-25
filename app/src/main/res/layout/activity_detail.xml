@@ -18,23 +18,45 @@
             android:layout_width="match_parent"
             android:layout_height="250dp" />
 
-        <TextView
-            android:id="@+id/detail_subtext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/detail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/primary_text_light"
-            android:textSize="18sp" />
+            android:textColor="?attr/colorAccent"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/detail_subtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -18,12 +18,17 @@ import com.squareup.picasso.Picasso;
 import ru.mechanik_ulyanovsk.mechanik.R;
 import ru.mechanik_ulyanovsk.mechanik.content.Constants;
 import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
+import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class DetailActivity extends ActionBarActivity {
 
     private final static String PHONE_NUMBER_URI = "tel:88422250777";
     private final static String MAIL_URI = "mailto:m-mehanik@mail.ru";
     private final static String SUBJECT_URI = "?subject=";
+
+    private final CompositeSubscription subscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,8 @@ public class DetailActivity extends ActionBarActivity {
         ImageView imageView = (ImageView) findViewById(R.id.detail_image);
         TextView subtextView = (TextView) findViewById(R.id.detail_subtext);
         TextView textView = (TextView) findViewById(R.id.detail_text);
+        TextView quantityView = (TextView) findViewById(R.id.quantity);
+        TextView priceView = (TextView) findViewById(R.id.price);
 
         CatalogItem catalogItem = (CatalogItem) getIntent()
                 .getExtras()
@@ -68,6 +75,22 @@ public class DetailActivity extends ActionBarActivity {
         Button mail = (Button) findViewById(R.id.mail_action);
         call.setOnClickListener(v -> dial());
         mail.setOnClickListener(v -> mail(mailSubject));
+
+        subscription.add(MechanicDataSource.getInstance()
+                        .getStockItem(catalogItem.getId())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                stockItem -> {
+                                    int quantity = stockItem.getQuantity();
+                                    quantityView.setText(Constants.AVAILABLE +
+                                                    (quantity == 0
+                                                            ? Constants.ZERO_STOCK
+                                                            : String.valueOf(quantity))
+                                    );
+                                    priceView.setText(String.valueOf(stockItem.getPrice()) + Constants.CURRENCY);
+                                }
+                        )
+        );
     }
 
     private void dial() {
@@ -110,5 +133,11 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscription.unsubscribe();
     }
 }
