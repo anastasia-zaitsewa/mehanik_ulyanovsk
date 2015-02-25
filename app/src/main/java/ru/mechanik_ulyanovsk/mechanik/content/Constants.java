@@ -8,8 +8,6 @@ public interface Constants {
     String ID_EXTRA = "ID_EXTRA";
     String SERIALIZABLE_CATALOG_ITEM_EXTRA = "SERIALIZABLE_CATALOG_ITEM_EXTRA";
     String SERVER_ROOT = "http://mehanik-ulyanovsk.ru";
-    String ARTICLE = "Артикул";
-    String AVAILABLE = "На складе: ";
     String CURRENCY = " руб.";
-    String ZERO_STOCK = "ожидается";
+    String ZERO_STOCK = "Ожидается";
 }
