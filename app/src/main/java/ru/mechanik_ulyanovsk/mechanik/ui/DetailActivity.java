@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,20 +17,29 @@ import com.squareup.picasso.Picasso;
 import ru.mechanik_ulyanovsk.mechanik.R;
 import ru.mechanik_ulyanovsk.mechanik.content.Constants;
 import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
+import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class DetailActivity extends ActionBarActivity {
 
     private final static String PHONE_NUMBER_URI = "tel:88422250777";
-    private final static String MAIL_URI = "mailto:m-mehanik@mail.ru";
+    private final static String MAIL_TO = "mailto:";
     private final static String SUBJECT_URI = "?subject=";
+
+    private final CompositeSubscription subscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ImageView imageView = (ImageView) findViewById(R.id.detail_image);
-        TextView subtextView = (TextView) findViewById(R.id.detail_subtext);
-        TextView textView = (TextView) findViewById(R.id.detail_text);
+        TextView subtextView = (TextView) findViewById(R.id.article);
+        TextView textView = (TextView) findViewById(R.id.caption);
+        TextView quantityView = (TextView) findViewById(R.id.quantity);
+        TextView priceView = (TextView) findViewById(R.id.price);
+        View priceTitle = findViewById(R.id.price_title);
+        View articleTitle = findViewById(R.id.article_title);
 
         CatalogItem catalogItem = (CatalogItem) getIntent()
                 .getExtras()
@@ -49,14 +57,16 @@ public class DetailActivity extends ActionBarActivity {
         String mailSubject;
         if (catalogItemArticle == null) {
             subtextView.setVisibility(View.GONE);
+            articleTitle.setVisibility(View.GONE);
             mailSubject = catalogItemName;
         } else {
             subtextView.setVisibility(View.VISIBLE);
+            articleTitle.setVisibility(View.VISIBLE);
             subtextView.setText(catalogItemArticle);
             mailSubject = String.format(
                     "%s. %s: %s",
                     catalogItem,
-                    Constants.ARTICLE,
+                    getResources().getString(R.string.article),
                     catalogItemArticle
             );
         }
@@ -64,10 +74,34 @@ public class DetailActivity extends ActionBarActivity {
         textView.setText(catalogItemName);
         DetailActivity.this.setTitle(catalogItemName);
 
-        Button call = (Button) findViewById(R.id.call_action);
-        Button mail = (Button) findViewById(R.id.mail_action);
+        View call = findViewById(R.id.call_action);
+        View mail = findViewById(R.id.mail_action);
         call.setOnClickListener(v -> dial());
         mail.setOnClickListener(v -> mail(mailSubject));
+
+        subscription.add(MechanicDataSource.getInstance()
+                        .getStockItem(catalogItem.getId())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                stockItem -> {
+                                    int quantity = stockItem.getQuantity();
+                                    quantityView.setText(quantity == 0
+                                                    ? Constants.ZERO_STOCK
+                                                    : String.valueOf(quantity)
+                                    );
+                                    float price = stockItem.getPrice();
+                                    priceView.setText(String.valueOf(price) + Constants.CURRENCY);
+
+                                    if (price == 0f) {
+                                        priceView.setVisibility(View.GONE);
+                                        priceTitle.setVisibility(View.GONE);
+                                    } else {
+                                        priceView.setVisibility(View.VISIBLE);
+                                        priceTitle.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                        )
+        );
     }
 
     private void dial() {
@@ -81,7 +115,11 @@ public class DetailActivity extends ActionBarActivity {
     private void mail(String subject) {
         Intent intent = new Intent(
                 Intent.ACTION_SENDTO,
-                Uri.parse(MAIL_URI + SUBJECT_URI + subject)
+                Uri.parse(MAIL_TO
+                                + getResources().getString(R.string.mail)
+                                + SUBJECT_URI
+                                + subject
+                )
         );
 
         try {
@@ -110,5 +148,11 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscription.unsubscribe();
     }
 }

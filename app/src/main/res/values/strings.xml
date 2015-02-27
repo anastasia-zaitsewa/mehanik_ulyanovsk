@@ -7,4 +7,9 @@
     <string name="call_action">Позвонить</string>
     <string name="mail_action">E-mail</string>
     <string name="no_mailing_app">Не найдено приложений для отправки почты</string>
+    <string name="article">Артикул</string>
+    <string name="available">На складе</string>
+    <string name="price">Стоимость</string>
+    <string name="phone">+7 (842) 22–50–777</string>
+    <string name="mail">m-mehanik@mail.ru</string>
 </resources>

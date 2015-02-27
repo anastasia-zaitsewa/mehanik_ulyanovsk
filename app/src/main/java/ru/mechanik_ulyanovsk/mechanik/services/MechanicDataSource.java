@@ -10,6 +10,7 @@ import retrofit.http.GET;
 import retrofit.http.Query;
 import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
 import ru.mechanik_ulyanovsk.mechanik.content.model.Section;
+import ru.mechanik_ulyanovsk.mechanik.content.model.StockItem;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -54,6 +55,13 @@ public class MechanicDataSource {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<StockItem> getStockItem(Long itemId){
+        return api
+                .getStockItem(itemId)
+                .cache()
+                .subscribeOn(Schedulers.io());
+    }
+
     /**
      * API using Retrofit
      */
@@ -67,5 +75,9 @@ public class MechanicDataSource {
 
         @GET("/api/items.php")
         Observable<List<CatalogItem>> listItems(@Query("filter") String filter);
+
+        @GET("/api/int/item.php")
+        Observable<StockItem> getStockItem(@Query("item_id") Long itemId);
+
     }
 }
