@@ -8,8 +8,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ru.mechanik_ulyanovsk.mechanik.R;
@@ -17,7 +19,9 @@ import ru.mechanik_ulyanovsk.mechanik.content.Constants;
 import ru.mechanik_ulyanovsk.mechanik.content.model.CatalogItem;
 import ru.mechanik_ulyanovsk.mechanik.services.MechanicDataSource;
 import ru.mechanik_ulyanovsk.mechanik.ui.adapter.ListAdapter;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -71,24 +75,37 @@ public class SearchActivity extends ActionBarActivity {
         subscription.add(searchUpdates
                         .sample(THRESHOLD_SEC, TimeUnit.SECONDS)
                         .filter(s -> s.length() > THRESHOLD_CHAR)
-                        .flatMap(input -> MechanicDataSource.getInstance().listItems(input))
+                        .switchMap(input -> MechanicDataSource.getInstance().listItems(input))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .onErrorResumeNext(throwable -> Observable.empty())
                         .subscribe(catalogItems -> {
-                            adapter.setCatalogItems(catalogItems);
-                            emptyView.setVisibility(
-                                    catalogItems.isEmpty()
-                                            ? View.VISIBLE
-                                            : View.GONE
-                            );
-                        })
+                                    adapter.setCatalogItems(catalogItems);
+                                    emptyView.setVisibility(
+                                            catalogItems.isEmpty()
+                                                    ? View.VISIBLE
+                                                    : View.GONE
+                                    );
+                                },
+                                throwable -> Toast
+                                        .makeText(
+                                                SearchActivity.this,
+                                                Constants.LOADING_ERROR,
+                                                Toast.LENGTH_SHORT
+                                        ).show())
         );
 
         subscription.add(searchUpdates.subscribe(s -> {
-                    if (s.length() <= THRESHOLD_CHAR) {
-                        adapter.setCatalogItems(Collections.<CatalogItem>emptyList());
-                    }
-                })
+                            if (s.length() <= THRESHOLD_CHAR) {
+                                adapter.setCatalogItems(Collections.<CatalogItem>emptyList());
+                            }
+                        },
+                        throwable -> Toast
+                                .makeText(
+                                        SearchActivity.this,
+                                        Constants.LOADING_ERROR,
+                                        Toast.LENGTH_SHORT
+                                ).show())
         );
     }
 
