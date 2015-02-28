@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
                                 .makeText(
                                         MainActivity.this,
                                         Constants.LOADING_ERROR,
-                                        Toast.LENGTH_SHORT
+                                        Toast.LENGTH_LONG
                                 ).show())
         );
 
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
                                     .makeText(
                                             MainActivity.this,
                                             Constants.LOADING_ERROR,
-                                            Toast.LENGTH_SHORT
+                                            Toast.LENGTH_LONG
                                     ).show())
             );
         }

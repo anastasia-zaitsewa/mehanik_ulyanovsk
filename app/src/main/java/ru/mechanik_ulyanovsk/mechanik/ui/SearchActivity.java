@@ -91,7 +91,7 @@ public class SearchActivity extends ActionBarActivity {
                                         .makeText(
                                                 SearchActivity.this,
                                                 Constants.LOADING_ERROR,
-                                                Toast.LENGTH_SHORT
+                                                Toast.LENGTH_LONG
                                         ).show())
         );
 
@@ -104,7 +104,7 @@ public class SearchActivity extends ActionBarActivity {
                                 .makeText(
                                         SearchActivity.this,
                                         Constants.LOADING_ERROR,
-                                        Toast.LENGTH_SHORT
+                                        Toast.LENGTH_LONG
                                 ).show())
         );
     }

@@ -104,7 +104,7 @@ public class DetailActivity extends ActionBarActivity {
                                         .makeText(
                                                 DetailActivity.this,
                                                 Constants.LOADING_ERROR,
-                                                Toast.LENGTH_SHORT
+                                                Toast.LENGTH_LONG
                                         ).show())
         );
     }
