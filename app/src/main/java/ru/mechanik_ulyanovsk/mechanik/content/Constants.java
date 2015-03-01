@@ -10,4 +10,5 @@ public interface Constants {
     String SERVER_ROOT = "http://mehanik-ulyanovsk.ru";
     String CURRENCY = " руб.";
     String ZERO_STOCK = "Ожидается";
+    String LOADING_ERROR = "Ошибка во время загрузки";
 }

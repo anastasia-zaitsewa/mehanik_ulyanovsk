@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import ru.mechanik_ulyanovsk.mechanik.R;
 import ru.mechanik_ulyanovsk.mechanik.content.Constants;
@@ -58,7 +59,12 @@ public class MainActivity extends ActionBarActivity {
         subscription.add(MechanicDataSource.getInstance()
                         .listSections(itemId)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adapter::setSections)
+                        .subscribe(adapter::setSections, throwable -> Toast
+                                .makeText(
+                                        MainActivity.this,
+                                        Constants.LOADING_ERROR,
+                                        Toast.LENGTH_LONG
+                                ).show())
         );
 
         if (itemId != null) {
@@ -67,7 +73,12 @@ public class MainActivity extends ActionBarActivity {
             subscription.add(MechanicDataSource.getInstance()
                             .listItems(itemId)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(adapter::setCatalogItems)
+                            .subscribe(adapter::setCatalogItems, throwable -> Toast
+                                    .makeText(
+                                            MainActivity.this,
+                                            Constants.LOADING_ERROR,
+                                            Toast.LENGTH_LONG
+                                    ).show())
             );
         }
     }

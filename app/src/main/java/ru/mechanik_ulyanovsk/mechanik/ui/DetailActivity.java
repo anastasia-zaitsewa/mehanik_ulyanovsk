@@ -99,8 +99,13 @@ public class DetailActivity extends ActionBarActivity {
                                         priceView.setVisibility(View.VISIBLE);
                                         priceTitle.setVisibility(View.VISIBLE);
                                     }
-                                }
-                        )
+                                },
+                                throwable -> Toast
+                                        .makeText(
+                                                DetailActivity.this,
+                                                Constants.LOADING_ERROR,
+                                                Toast.LENGTH_LONG
+                                        ).show())
         );
     }
 
